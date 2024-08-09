@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import shutil
 
 # 定义仿真参数
-injection_rates = np.linspace(0.01, 1.0, 30)
+injection_rates = np.linspace(0.01, 1.0, 50)
 traffic_patterns = [
     "uniform_random",
     "shuffle",
@@ -32,7 +32,7 @@ for pattern in traffic_patterns:
         # 运行GEM5仿真并忽略输出
         cmd = (
             f"./build/NULL/gem5.opt configs/example/garnet_synth_traffic.py "
-            f"--network=garnet --num-cpus=32 --num-dirs=32 "
+            f"--network=garnet --num-cpus=64 --num-dirs=64 "
             f"--topology=Mesh_XY --mesh-rows=8 "
             f"--inj-vnet=0 --synthetic={pattern} "
             f"--sim-cycles=10000 --injectionrate={rate}"
