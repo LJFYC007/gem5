@@ -284,17 +284,11 @@ RoutingUnit::outportComputeMinimal(RouteInfo route, NetDest msg_destination)
     }
 
     // If not directly connected, search for a 2-hop path
-    bool is_connected = false;
     for (int link = 0; link < m_routing_table[vnet].size(); link++) {
         if (msg_destination.intersectionIsNotEmpty(
             m_routing_table[vnet][link])) {
-
-            // TODO
-            // if the next route is connected to the target route
-            //{
-            //    num_candidates++;
-            //    output_link_candidates.push_back(link);
-            //}
+            num_candidates++;
+            output_link_candidates.push_back(link);
         }
     }
 

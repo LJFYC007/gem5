@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 import shutil
 
 # 定义仿真参数
-injection_rates = np.linspace(0.01, 0.3, 10)
+injection_rates = np.linspace(0.01, 1.0, 100)
 traffic_patterns = [
     "uniform_random",
-    # "shuffle",
-    # "transpose",
-    # "tornado",
-    # "neighbor",
+    "shuffle",
+    "transpose",
+    "tornado",
+    "neighbor",
 ]
 results = {}
 
