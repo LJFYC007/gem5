@@ -73,6 +73,9 @@ class RoutingUnit
                          int inport,
                          PortDirection inport_dirn);
 
+    // Minimal Static Routing Algorithm
+    int outportComputeMinimal(RouteInfo route, NetDest net_dest);
+
     // Custom Routing Algorithm using Port Directions
     int outportComputeCustom(RouteInfo route,
                              int inport,
