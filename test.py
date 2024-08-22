@@ -5,15 +5,20 @@ import matplotlib.pyplot as plt
 import shutil
 
 # Define simulation parameters
-injection_rates = np.linspace(0.01, 1.0, 10)
+injection_rates = np.linspace(0.3, 1.0, 20)
 traffic_patterns = [
-    "uniform_random",
+    # "uniform_random",
     "shuffle",
+    "bit_reverse",
     # "transpose",
-    # "tornado",
+    "tornado",
     # "neighbor",
 ]
-topologies = ["--topology=Mesh_XY --mesh-rows=8", "--topology=SlimFly"]
+topologies = [
+    # "--topology=Mesh_XY --mesh-rows=8",
+    "--topology=SlimFly",
+    "--topology=SlimFly --vc-algorithm=1",
+]
 
 results = {}
 
@@ -23,9 +28,17 @@ os.makedirs(temp_dir, exist_ok=True)
 
 # Run simulations
 for topology in topologies:
-    topology_name = topology.split()[0].split("=")[
-        1
-    ]  # Extract topology name for labeling
+    topology_params = topology.split()
+    topology_name = topology_params[0].split("=")[1]
+    additional_params = "_".join(
+        [
+            param.replace("--", "").replace("=", "-")
+            for param in topology_params[1:]
+        ]
+    )
+    if additional_params:
+        topology_name = f"{topology_name}_{additional_params}"
+
     for pattern in traffic_patterns:
         key = f"{topology_name}:{pattern}"
         results[key] = {
@@ -43,7 +56,7 @@ for topology in topologies:
                 f"./build/NULL/gem5.opt configs/example/garnet_synth_traffic.py "
                 f"--network=garnet --num-cpus=64 --num-dirs=64 "
                 f"{topology} "
-                f"--inj-vnet=0 --synthetic={pattern} "
+                f"--inj-vnet=0 --synthetic={pattern} --vcs-per-vnet=2 "
                 f"--sim-cycles=10000 --injectionrate={rate}"
             )
             subprocess.run(

@@ -83,7 +83,7 @@ def define_options(parser):
         "--vcs-per-vnet",
         action="store",
         type=int,
-        default=4,
+        default=2,
         help="""number of virtual channels per virtual network
             inside garnet network.""",
     )
@@ -97,6 +97,15 @@ def define_options(parser):
             1: XY (for Mesh. see garnet/RoutingUnit.cc)
             2: Minimal (for SlimFly. see garnet/RoutingUnit.cc)
             3: Custom (see garnet/RoutingUnit.cc""",
+    )
+    parser.add_argument(
+        "--vc-algorithm",
+        action="store",
+        type=int,
+        default=0,
+        help="""virtual channel algorithm in network.
+            0: SA-I
+            1: Escape virtual channel algorithm""",
     )
     parser.add_argument(
         "--network-fault-model",
@@ -169,6 +178,7 @@ def init_network(options, network, InterfaceClass):
         network.vcs_per_vnet = options.vcs_per_vnet
         network.ni_flit_size = options.link_width_bits / 8
         network.routing_algorithm = options.routing_algorithm
+        network.vc_algorithm = options.vc_algorithm
         network.garnet_deadlock_threshold = options.garnet_deadlock_threshold
 
         # Create Bridges and connect them to the corresponding links

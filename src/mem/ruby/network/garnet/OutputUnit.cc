@@ -34,6 +34,7 @@
 #include "debug/RubyNetwork.hh"
 #include "mem/ruby/network/garnet/Credit.hh"
 #include "mem/ruby/network/garnet/CreditLink.hh"
+#include "mem/ruby/network/garnet/GarnetNetwork.hh"
 #include "mem/ruby/network/garnet/Router.hh"
 #include "mem/ruby/network/garnet/flitBuffer.hh"
 
@@ -93,31 +94,48 @@ OutputUnit::has_credit(int out_vc)
 }
 
 
+bool
+OutputUnit::allow_escape_vc(RouteInfo route, int vc)
+{
+    int src = route.src_router;
+    int dest = route.dest_router;
+    int present = m_router->get_id();
+    VCAlgorithm vc_algorithm =
+        (VCAlgorithm) m_router->get_net_ptr()->getVCAlgorithm();
+    if (vc_algorithm == DEFAULT_)
+        return true;
+    if (present == src && vc != 0)
+        return false;
+    if (present != src && present != dest && vc != 1)
+        return false;
+    return true;
+}
+
 // Check if the output port (i.e., input port at next router) has free VCs.
 bool
-OutputUnit::has_free_vc(int vnet)
+OutputUnit::has_free_vc(int vnet, RouteInfo route)
 {
     int vc_base = vnet*m_vc_per_vnet;
     for (int vc = vc_base; vc < vc_base + m_vc_per_vnet; vc++) {
-        if (is_vc_idle(vc, curTick()))
+        if (is_vc_idle(vc, curTick())
+            && allow_escape_vc(route, vc % m_vc_per_vnet))
             return true;
     }
-
     return false;
 }
 
 // Assign a free output VC to the winner of Switch Allocation
 int
-OutputUnit::select_free_vc(int vnet)
+OutputUnit::select_free_vc(int vnet, RouteInfo route)
 {
     int vc_base = vnet*m_vc_per_vnet;
     for (int vc = vc_base; vc < vc_base + m_vc_per_vnet; vc++) {
-        if (is_vc_idle(vc, curTick())) {
+        if (is_vc_idle(vc, curTick())
+            && allow_escape_vc(route, vc % m_vc_per_vnet))  {
             outVcState[vc].setState(ACTIVE_, curTick());
             return vc;
         }
     }
-
     return -1;
 }
 
