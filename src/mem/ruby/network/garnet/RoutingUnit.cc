@@ -190,8 +190,8 @@ RoutingUnit::outportCompute(RouteInfo route, int inport,
             lookupRoutingTable(route.vnet, route.net_dest); break;
         case XY_:     outport =
             outportComputeXY(route, inport, inport_dirn); break;
-        case MINIMAL_:outport =
-            outportComputeMinimal(route, route.net_dest); break;
+        case VALIANT_:outport =
+            outportComputeValiant(route, route.net_dest); break;
         // any custom algorithm
         case CUSTOM_: outport =
             outportComputeCustom(route, inport, inport_dirn); break;
@@ -262,48 +262,11 @@ RoutingUnit::outportComputeXY(RouteInfo route,
     return m_outports_dirn2idx[outport_dirn];
 }
 
-// Minimal static routing
+// Valiant random routing
 int
-RoutingUnit::outportComputeMinimal(RouteInfo route, NetDest msg_destination)
+RoutingUnit::outportComputeValiant(RouteInfo route, NetDest msg_destination)
 {
-    auto vnet = route.vnet;
-    int output_link = -1;
-    std::vector<int> neighbor_local, neighbor_dest;
-    std::vector<int> output_link_candidates;
-    int num_candidates = 0;
-
-    // Check if directly connected
-    for (int link = 0; link < m_routing_table[vnet].size(); link++) {
-        if (msg_destination.intersectionIsNotEmpty(
-            m_routing_table[vnet][link])) {
-
-            if (msg_destination.isEqual(m_routing_table[vnet][link])) {
-                return link;
-            }
-        }
-    }
-
-    // If not directly connected, search for a 2-hop path
-    for (int link = 0; link < m_routing_table[vnet].size(); link++) {
-        if (msg_destination.intersectionIsNotEmpty(
-            m_routing_table[vnet][link])) {
-            num_candidates++;
-            output_link_candidates.push_back(link);
-        }
-    }
-
-    if (output_link_candidates.size() == 0) {
-        fatal("Fatal Error:: No Route exists from this Router.");
-        exit(0);
-    }
-
-    // Randomly select any candidate output link
-    int candidate = 0;
-    if (!(m_router->get_net_ptr())->isVNetOrdered(vnet))
-        candidate = rand() % num_candidates;
-
-    output_link = output_link_candidates.at(candidate);
-    return output_link;
+    return lookupRoutingTable(route.vnet, route.net_dest);
 }
 
 // Template for implementing custom routing algorithm

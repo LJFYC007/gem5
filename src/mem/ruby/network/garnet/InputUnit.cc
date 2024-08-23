@@ -93,7 +93,22 @@ InputUnit::wakeup()
             assert(virtualChannels[vc].get_state() == IDLE_);
             set_vc_active(vc, curTick());
 
+            // Set the middle router
+            int local_router = m_router->get_id();
+            int dest_router = t_flit->get_route().dest_router;
+            unsigned int seed = (local_router + dest_router)
+                ^ (local_router * dest_router);
+            srand(seed);
+            int mid_router = -1;
+            do {
+                mid_router = rand() % 50;
+            } while (mid_router == local_router || mid_router == dest_router);
+            t_flit->mid_router = mid_router;
             // Route computation for this vc
+            if (m_router->get_net_ptr()->getRoutingAlgorithm() == VALIANT_) {
+                // TODO
+                // Define the RouteInfo of mid router
+            }
             int outport = m_router->route_compute(t_flit->get_route(),
                 m_id, m_direction);
 

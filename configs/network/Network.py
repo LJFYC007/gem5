@@ -95,7 +95,7 @@ def define_options(parser):
         help="""routing algorithm in network.
             0: weight-based table
             1: XY (for Mesh. see garnet/RoutingUnit.cc)
-            2: Minimal (for SlimFly. see garnet/RoutingUnit.cc)
+            2: Valiant (for SlimFly. see garnet/RoutingUnit.cc)
             3: Custom (see garnet/RoutingUnit.cc""",
     )
     parser.add_argument(

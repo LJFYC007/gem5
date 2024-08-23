@@ -73,8 +73,8 @@ class RoutingUnit
                          int inport,
                          PortDirection inport_dirn);
 
-    // Minimal Static Routing Algorithm
-    int outportComputeMinimal(RouteInfo route, NetDest net_dest);
+    // Valiant Random Routing Algorithm
+    int outportComputeValiant(RouteInfo route, NetDest net_dest);
 
     // Custom Routing Algorithm using Port Directions
     int outportComputeCustom(RouteInfo route,
@@ -84,7 +84,6 @@ class RoutingUnit
     // Returns true if vnet is present in the vector
     // of vnets or if the vector supports all vnets.
     bool supportsVnet(int vnet, std::vector<int> sVnets);
-
 
   private:
     Router *m_router;

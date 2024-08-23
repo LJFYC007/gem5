@@ -115,6 +115,8 @@ class flit
 
     uint32_t m_width;
     int msgSize;
+
+    int mid_router = -1;
   protected:
     int m_packet_id;
     int m_id;
