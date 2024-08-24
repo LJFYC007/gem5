@@ -191,7 +191,7 @@ RoutingUnit::outportCompute(RouteInfo route, int inport,
         case XY_:     outport =
             outportComputeXY(route, inport, inport_dirn); break;
         case VALIANT_:outport =
-            outportComputeValiant(route, route.net_dest); break;
+            outportComputeValiant(route); break;
         // any custom algorithm
         case CUSTOM_: outport =
             outportComputeCustom(route, inport, inport_dirn); break;
@@ -264,8 +264,13 @@ RoutingUnit::outportComputeXY(RouteInfo route,
 
 // Valiant random routing
 int
-RoutingUnit::outportComputeValiant(RouteInfo route, NetDest msg_destination)
+RoutingUnit::outportComputeValiant(RouteInfo route)
 {
+    int present = m_router->get_id();
+    int mid = route.mid_router;
+    if ( route.hops_traversed == 0 ||
+        (route.hops_traversed == 1 && present != mid) )
+        return lookupRoutingTable(route.vnet, route.net_mid);
     return lookupRoutingTable(route.vnet, route.net_dest);
 }
 

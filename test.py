@@ -7,8 +7,8 @@ import shutil
 # Define simulation parameters
 injection_rates = np.linspace(0.3, 1.0, 20)
 traffic_patterns = [
-    # "uniform_random",
-    "shuffle",
+    "uniform_random",
+    # "shuffle",
     "bit_reverse",
     # "transpose",
     "tornado",
@@ -17,7 +17,8 @@ traffic_patterns = [
 topologies = [
     # "--topology=Mesh_XY --mesh-rows=8",
     "--topology=SlimFly",
-    "--topology=SlimFly --vc-algorithm=1",
+    # "--topology=SlimFly --vc-algorithm=1",
+    "--topology=SlimFly --routing-algorithm=2",
 ]
 
 results = {}
@@ -126,12 +127,12 @@ plt.figure(figsize=(12, 8))
 for key in results:
     topology_name, pattern = key.split(":", 1)
     plt.plot(
-        results[key]["reception_rate"],
+        results[key]["injection_rate"],
         results[key]["average_latency"],
         label=f"{topology_name} - {pattern}",
     )
 
-plt.xlabel("Throughput (1/Cycle)")
+plt.xlabel("Injection Rate")
 plt.ylabel("Average Latency (Cycles)")
 plt.title(
     "Latency-Throughput Curve for Different Traffic Patterns and Topologies"

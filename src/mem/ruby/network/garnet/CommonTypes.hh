@@ -61,17 +61,19 @@ enum VCAlgorithm
 struct RouteInfo
 {
     RouteInfo()
-        : vnet(0), src_ni(0), src_router(0), dest_ni(0), dest_router(0),
-          hops_traversed(0)
+        : vnet(0), src_ni(0), src_router(0), mid_router(0),
+          dest_ni(0), dest_router(0), hops_traversed(0)
     {}
 
     // destination format for table-based routing
     int vnet;
     NetDest net_dest;
+    NetDest net_mid;
 
     // src and dest format for topology-specific routing
     int src_ni;
     int src_router;
+    int mid_router;
     int dest_ni;
     int dest_router;
     int hops_traversed;

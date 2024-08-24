@@ -430,6 +430,20 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
         route.dest_ni = destID;
         route.dest_router = m_net_ptr->get_router_id(destID, vnet);
 
+        NetDest net_mid;
+        NodeID midID = 64 + rand() % 64;
+        route.mid_router = midID % 50;
+        for (int m = 0; m < (int) MachineType_NUM; m++) {
+            if ((midID >= MachineType_base_number((MachineType) m)) &&
+                midID < MachineType_base_number((MachineType) (m+1))) {
+                net_mid.clear();
+                net_mid.add((MachineID) {(MachineType) m, (midID -
+                    MachineType_base_number((MachineType) m))});
+                break;
+            }
+        }
+        route.net_mid = net_mid;
+
         // initialize hops_traversed to -1
         // so that the first router increments it to 0
         route.hops_traversed = -1;

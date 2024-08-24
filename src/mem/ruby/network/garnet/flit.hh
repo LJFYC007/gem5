@@ -117,12 +117,13 @@ class flit
     int msgSize;
 
     int mid_router = -1;
+    RouteInfo m_route;
+
   protected:
     int m_packet_id;
     int m_id;
     int m_vnet;
     int m_vc;
-    RouteInfo m_route;
     int m_size;
     Tick m_enqueue_time, m_dequeue_time;
     Tick m_time;

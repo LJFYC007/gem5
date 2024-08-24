@@ -74,7 +74,7 @@ class RoutingUnit
                          PortDirection inport_dirn);
 
     // Valiant Random Routing Algorithm
-    int outportComputeValiant(RouteInfo route, NetDest net_dest);
+    int outportComputeValiant(RouteInfo route);
 
     // Custom Routing Algorithm using Port Directions
     int outportComputeCustom(RouteInfo route,
