@@ -42,6 +42,18 @@ def define_options(parser):
         help="check configs/topologies for complete set",
     )
     parser.add_argument(
+        "--num-groups",
+        type=int,
+        default=1,
+        help="the number of groups in the GragonFly topology",
+    )
+    parser.add_argument(
+        "--num-routers-per-group",
+        type=int,
+        default=50,
+        help="the number of routers per group in the GragonFly topology",
+    )
+    parser.add_argument(
         "--mesh-rows",
         type=int,
         default=0,
