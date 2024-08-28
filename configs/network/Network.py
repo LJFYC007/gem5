@@ -45,13 +45,13 @@ def define_options(parser):
         "--num-groups",
         type=int,
         default=1,
-        help="the number of groups in the GragonFly topology",
+        help="the number of groups in the DragonFly topology",
     )
     parser.add_argument(
         "--num-routers-per-group",
         type=int,
         default=50,
-        help="the number of routers per group in the GragonFly topology",
+        help="the number of routers per group in the DragonFly topology",
     )
     parser.add_argument(
         "--mesh-rows",

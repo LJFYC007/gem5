@@ -5,20 +5,22 @@ import matplotlib.pyplot as plt
 import shutil
 
 # Define simulation parameters
-injection_rates = np.linspace(0.3, 1.0, 20)
+injection_rates = np.linspace(0.01, 1.0, 30)
 traffic_patterns = [
-    "uniform_random",
+    # "uniform_random",
     # "shuffle",
-    "bit_reverse",
+    # "bit_reverse",
     # "transpose",
-    "tornado",
+    # "tornado",
     # "neighbor",
+    "custom",
 ]
 topologies = [
     # "--topology=Mesh_XY --mesh-rows=8",
-    "--topology=SlimFly",
-    # "--topology=SlimFly --vc-algorithm=1",
-    "--topology=SlimFly --routing-algorithm=2",
+    # "--topology=SlimFly",
+    "--topology=SlimFly --vcs-per-vnet=1",
+    "--topology=SlimFly --vc-algorithm=1",
+    # "--topology=SlimFly --routing-algorithm=2",
 ]
 
 results = {}
@@ -57,7 +59,7 @@ for topology in topologies:
                 f"./build/NULL/gem5.opt configs/example/garnet_synth_traffic.py "
                 f"--network=garnet --num-cpus=64 --num-dirs=64 "
                 f"{topology} "
-                f"--inj-vnet=0 --synthetic={pattern} --vcs-per-vnet=2 "
+                f"--inj-vnet=0 --synthetic={pattern} "
                 f"--sim-cycles=10000 --injectionrate={rate}"
             )
             subprocess.run(
@@ -128,12 +130,12 @@ for key in results:
     topology_name, pattern = key.split(":", 1)
     plt.plot(
         results[key]["injection_rate"],
-        results[key]["average_latency"],
+        results[key]["reception_rate"],
         label=f"{topology_name} - {pattern}",
     )
 
 plt.xlabel("Injection Rate")
-plt.ylabel("Average Latency (Cycles)")
+plt.ylabel("Reception Rate")
 plt.title(
     "Latency-Throughput Curve for Different Traffic Patterns and Topologies"
 )

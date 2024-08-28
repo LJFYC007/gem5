@@ -236,6 +236,14 @@ GarnetSyntheticTraffic::generatePkt()
         dest_x = (src_x + (int) ceil(radix/2) - 1) % radix;
         dest_y = src_y;
         destination = dest_y*radix + dest_x;
+    } else if (traffic == CUSTOM_) {
+        if (id == 1 || id == 4 || id == 30 || id == 35 || id == 40 || id == 45)
+            destination = 25;
+        else if (id == 27 || id == 28 || id == 5
+                || id == 10 || id == 15 || id == 20)
+            destination = 0;
+        else
+            destination = random_mt.random<unsigned>(0, num_destinations - 1);
     }
     else {
         fatal("Unknown Traffic Type: %s!\n", traffic);
@@ -334,6 +342,7 @@ GarnetSyntheticTraffic::initTrafficType()
     trafficStringToEnum["tornado"] = TORNADO_;
     trafficStringToEnum["transpose"] = TRANSPOSE_;
     trafficStringToEnum["uniform_random"] = UNIFORM_RANDOM_;
+    trafficStringToEnum["custom"] = CUSTOM_;
 }
 
 void

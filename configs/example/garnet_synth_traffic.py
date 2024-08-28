@@ -57,6 +57,7 @@ parser.add_argument(
         "neighbor",
         "shuffle",
         "transpose",
+        "custom",
     ],
 )
 
