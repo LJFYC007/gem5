@@ -8,6 +8,7 @@
 \usepackage{geometry}
 \usepackage{lastpage}
 \usepackage{lipsum}
+\usepackage{float}
 \geometry{left=2.5cm, right=2.5cm, top=2cm, bottom=4cm}
 
 \title{\bf\LARGE AI+X Computing Acceleration: From Algorithms Development, Analysis, to Deployment: Final Report}
@@ -80,8 +81,8 @@ To ensure deadlock avoidance in SlimFly, we implement a technique that utilizes 
 
 \subsection{Routing}
 \begin{itemize}
-    \item \textbf{Minimal Static Routing}: To find the shortest path, we assign a weight of 1 to all links in the network and use a shortest path algorithm.
-    \item \textbf{Valiant Random Routing}: To select the intermediate router, we define a random selection mechanism that balances traffic.
+    \item \textbf{Minimal Static Routing}: To find the shortest path, we assign a weight of 1 to all links in the network. Since the function \texttt{lookupRoutingTable} in \texttt{RoutingUnit.cc} will select the path of smallest weight, we can directly call it and then get the shortest path.
+    \item \textbf{Valiant Random Routing}: To select the intermediate router, we define a random selection mechanism that balances traffic. Specifically, we add a member variable \texttt{mid\_router} to class \texttt{RouteInfo} in \texttt{src/mem/ruby/network/garnet/CommonTypes.hh} and decide the path in \texttt{RoutingUnit.cc}.
 \end{itemize}
 
 \subsection{Deadlock Freedom}
@@ -94,33 +95,96 @@ This modification mainly involves changes in \texttt{src/mem/ruby/network/garnet
 
 \subsection{Topology}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{topology_1.png}
+    \caption{Experiemnts of topology}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{topology_2.png}
+    \caption{Experiemnts of topology}
+\end{figure}
+
+As shown in Figure 3 and Figure 4, ...
+
 \subsection{Routing}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{routing.png}
+    \caption{Experiemnts of routing}
+\end{figure}
 
 \subsection{Deadlock Freedom}
 
 To evaluate the effectiveness of the deadlock-avoidance technique, we conducted simulations with and without the deadlock prevention algorithm. The built-in synthetic traffic patterns in Garnet are not suitable for detecting deadlocks in SlimFly, so we implemented a custom synthetic traffic pattern. In this pattern, most packets follow a specific path \((R_x, R_y)\), which is clearly illustrated below.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{WorstCase.png}
+    \includegraphics[width=0.6\linewidth]{WorstCase.png}
     \caption{Illustration of the worst-case scenario for SlimFly}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{deadlock.png}
+    \includegraphics[width=0.85\linewidth]{deadlock.png}
     \caption{Experiemnts of deadlock free algorithm}
 \end{figure}
 
 We use reception rate to indicate the occurrence of deadlocks in the minimal static routing algorithm. The original algorithm shows some points with extremely low reception rates, indicating deadlocks. Due to the inherent randomness in our synthetic traffic pattern, some areas may still exhibit higher reception rates.
 
-\section{Labor Distribution}
+\section{Labor distribution}
 Yuqi Ren (50\%):
 \begin{itemize}
-    \item Paper reading
+    \item Paper reading (SlimFly, DragonFly)
     \item DragonFly topology
     \item Minimal routing, Valiant random routing
-    \item Experiments: deadlock
+    \item Experiments (50\%)
+    \item Report (Topology, Routing)
+    \item PPT, Pre
 \end{itemize}
+Jinfan Lu (50\%):
+\begin{itemize}
+    \item Paper reading (SlimFly, deadlock)
+    \item SlimFly topology
+    \item Valiant random routing
+    \item Experiments (50\%)
+    \item Report (deadlock)
+    \item PPT, Pre
+\end{itemize}
+In summary, we complete the entire project with equal contributions.
+
+\section{Reference}
+\begin{itemize}
+    \item Besta, Maciej, and Torsten Hoefler. "Slim fly: A cost effective low-diameter network topology." SC'14: proceedings of the international conference for high performance computing, networking, storage and analysis. IEEE, 2014.
+    \item Kim, John, et al. "Technology-driven, highly-scalable dragonfly topology." ACM SIGARCH Computer Architecture News 36.3 (2008): 77-88.
+    \item Besta, Maciej, et al. "Slim noc: A low-diameter on-chip network topology for high energy efficiency and scalability." ACM SIGPLAN Notices 53.2 (2018): 43-55.
+\end{itemize}
+
+\section*{Appendix (How to Reproduce Experimental Results)}
+\begin{Verbatim}[frame=single]
+    # 1: Install Dependencies
+    sudo apt install build-essential git m4 scons zlib1g zlib1g-dev \
+    libprotobuf-dev protobuf-compiler libprotoc-dev libgoogle-perftools-dev \
+    python3-dev libboost-all-dev pkg-config
+
+    # 2: Build
+    git clone https://github.com/gem5/gem5
+    cd gem5
+    git checkout v23.0.0.1
+    # replace /path/to/lab4.patch with the actual path of lab4.patch
+    git apply /path/to/lab4.patch
+    pip install -r requirements.txt
+    scons build/NULL/gem5.opt PROTOCOL=Garnet_standalone -j $(nproc)
+
+    # 3: Run
+    python ./experiemnts/topology_1.py      # Figure 3
+    python ./experiemnts/topology_2.py      # Figure 4
+    python ./experiemnts/routing.py         # Figure 5
+    python ./experiemnts/deadlock.py        # Figure 7
+
+\end{Verbatim}
 
 \end{document}
