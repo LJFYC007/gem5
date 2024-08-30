@@ -32,7 +32,7 @@
 
 \section{Introduction}
 
-In this project, we have implemented two advanced network topologies, SlimFly and DragonFly, alongside their corresponding routing algorithms and a deadlock-avoidance technique that utilizes virtual channels. SlimFly and DragonFly are among the most efficient topologies, with diameters of two and three, respectively.
+This project explores the implementation and analysis of two cutting-edge network topologies—SlimFly and DragonFly—along with their associated routing algorithms and a novel deadlock-avoidance technique utilizing virtual channels. Both SlimFly and DragonFly topologies are recognized for their efficiency and optimized network diameters, which stand at two and three, respectively. Our study delves into these topologies by examining their structure, performance under various conditions, and the implementation of effective routing and deadlock avoidance strategies to enhance their applicability in complex networking environments.
 
 \section{Architecture}
 \subsection{Topology}
@@ -107,6 +107,7 @@ These modifications primarily involved changes in \texttt{src/mem/ruby/network/g
 
 As illustrated in Figures 3 and 4, we conducted experiments comparing the average latency of different topologies—Mesh\_XY, SlimFly, and DragonFly—under the default minimal routing algorithm. SlimFly demonstrated superior performance across all synthetic traffic patterns, attributed to its small diameter of 2, which minimizes the number of hops required. DragonFly showed its advantage primarily under uniform random traffic, but it suffered from congestion under other synthetic traffic patterns. Mesh\_XY performed well only in neighbor traffic, as its structure allows neighboring nodes to reach each other in just one hop. These results highlight the robustness of the SlimFly topology, which maintained good performance across various traffic scenarios.
 
+As mentioned in the paper "Slim NoC: A Low-Diameter On-Chip Network Topology for High Energy Efficiency and Scalability", SlimFly is similar to the balanced DragonFly but only one cable connects two DragonFly groups. Since each DragonFly group is a fully-connected graph, which is not necessarily true for SF, SlimFly has less number of routers and larger network radix in comparison to DragonFly.
 \subsection{Routing}
 
 \begin{figure}[H]
@@ -115,11 +116,13 @@ As illustrated in Figures 3 and 4, we conducted experiments comparing the averag
     \caption{Experiemnts of routing}
 \end{figure}
 
-In the routing section, we implemented Valiant Random Routing. In the chart, \texttt{routing-algorithm=0} represents Minimal Static Routing, and \texttt{routing-algorithm=2} corresponds to Valiant Random Routing. It is evident from the results that our newly implemented algorithm significantly reduced congestion. While it introduces a slight increase in low-injection latency, it effectively alleviates the risk of deadlocks and congestion, offering a more stable and efficient routing solution.
+In the routing section, we implemented the Minimal Static Routing and Valiant Random Routing. In the chart, \texttt{routing-algorithm=0} represents Minimal Static Routing, and \texttt{routing-algorithm=2} corresponds to Valiant Random Routing. It is evident from the results that the Valiant Random Routing significantly reduced congestion. While it introduces a slight increase in low-injection latency, it effectively alleviates the risk of deadlocks and congestion, offering a more stable and efficient routing solution. We can notice that the latency at high injection rate is significantly lower than that of Minimal Static Routing.
 
 \subsection{Deadlock Freedom}
 
 To evaluate the effectiveness of the deadlock-avoidance technique, we conducted simulations with and without the deadlock prevention algorithm. The built-in synthetic traffic patterns in Garnet are not suitable for detecting deadlocks in SlimFly, so we implemented a custom synthetic traffic pattern. In this pattern, most packets follow a specific path \((R_x, R_y)\), which is clearly illustrated below.
+
+We use reception rate to indicate the occurrence of deadlocks in the minimal static routing algorithm. The original algorithm shows some points with extremely low reception rates, indicating deadlocks. Due to the inherent randomness in our synthetic traffic pattern, some areas may still exhibit higher reception rates.
 
 \begin{figure}[H]
     \centering
@@ -132,8 +135,6 @@ To evaluate the effectiveness of the deadlock-avoidance technique, we conducted 
     \includegraphics[width=0.85\linewidth]{deadlock.png}
     \caption{Experiemnts of deadlock free algorithm}
 \end{figure}
-
-We use reception rate to indicate the occurrence of deadlocks in the minimal static routing algorithm. The original algorithm shows some points with extremely low reception rates, indicating deadlocks. Due to the inherent randomness in our synthetic traffic pattern, some areas may still exhibit higher reception rates.
 
 \section{Labor distribution}
 Yuqi Ren (50\%):
