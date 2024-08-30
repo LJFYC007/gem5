@@ -34,8 +34,6 @@
 
 In this project, we have implemented two advanced network topologies, SlimFly and DragonFly, alongside their corresponding routing algorithms and a deadlock-avoidance technique that utilizes virtual channels. SlimFly and DragonFly are among the most efficient topologies, with diameters of two and three, respectively.
 
-...
-
 \section{Architecture}
 \subsection{Topology}
 \begin{itemize}
@@ -89,7 +87,7 @@ To ensure deadlock avoidance in SlimFly, we implement a technique that utilizes 
 
 In our implementation, we set the number of virtual channels to 2. When sending a packet, we check whether the destination router is directly connected. If it is, we use \(VC_0\); otherwise, we use \(VC_0\) for the first hop and \(VC_1\) for the second hop.
 
-This modification mainly involves changes in \texttt{src/mem/ruby/network/garnet/OutputUnit.cc}, specifically in the logic for the functions \texttt{has\_free\_vc} and \texttt{select\_free\_vc}.
+These modifications primarily involved changes in \texttt{src/mem/ruby/network/garnet/OutputUnit.cc}, particularly in the logic of the \texttt{has\_free\_vc} and \texttt{select\_free\_vc} functions, which are responsible for managing the availability and selection of virtual channels.
 
 \section{Experiments and Analysis}
 
@@ -107,7 +105,7 @@ This modification mainly involves changes in \texttt{src/mem/ruby/network/garnet
     \caption{Experiemnts of topology}
 \end{figure}
 
-As shown in Figure 3 and Figure 4, ...
+As illustrated in Figures 3 and 4, we conducted experiments comparing the average latency of different topologies—Mesh\_XY, SlimFly, and DragonFly—under the default minimal routing algorithm. SlimFly demonstrated superior performance across all synthetic traffic patterns, attributed to its small diameter of 2, which minimizes the number of hops required. DragonFly showed its advantage primarily under uniform random traffic, but it suffered from congestion under other synthetic traffic patterns. Mesh\_XY performed well only in neighbor traffic, as its structure allows neighboring nodes to reach each other in just one hop. These results highlight the robustness of the SlimFly topology, which maintained good performance across various traffic scenarios.
 
 \subsection{Routing}
 
@@ -116,6 +114,8 @@ As shown in Figure 3 and Figure 4, ...
     \includegraphics[width=0.85\linewidth]{routing.png}
     \caption{Experiemnts of routing}
 \end{figure}
+
+In the routing section, we implemented Valiant Random Routing. In the chart, \texttt{routing-algorithm=0} represents Minimal Static Routing, and \texttt{routing-algorithm=2} corresponds to Valiant Random Routing. It is evident from the results that our newly implemented algorithm significantly reduced congestion. While it introduces a slight increase in low-injection latency, it effectively alleviates the risk of deadlocks and congestion, offering a more stable and efficient routing solution.
 
 \subsection{Deadlock Freedom}
 
