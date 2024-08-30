@@ -43,7 +43,7 @@ for custom_name, topology in topologies:
 
             # Run GEM5 simulation and ignore output
             cmd = (
-                f"../build/NULL/gem5.opt ../configs/example/garnet_synth_traffic.py "
+                f"./build/NULL/gem5.opt ./configs/example/garnet_synth_traffic.py "
                 f"--network=garnet --num-cpus=64 --num-dirs=64 "
                 f"{topology} "
                 f"--inj-vnet=0 --synthetic={pattern} "
@@ -128,7 +128,7 @@ plt.legend()
 plt.grid(True)
 
 # Save plot to the script directory
-output_image = "../report/deadlock.png"
+output_image = "./report/deadlock.png"
 plt.savefig(output_image)
 
 # Delete temporary folder and its contents
