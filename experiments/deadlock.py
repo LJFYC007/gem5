@@ -128,7 +128,7 @@ plt.legend()
 plt.grid(True)
 
 # Save plot to the script directory
-output_image = "./report/deadlock.png"
+output_image = "deadlock.png"
 plt.savefig(output_image)
 
 # Delete temporary folder and its contents
