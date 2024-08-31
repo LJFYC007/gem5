@@ -7,7 +7,7 @@ import shutil
 # Define simulation parameters
 injection_rates = np.linspace(0.01, 1.0, 30)
 traffic_patterns = [
-    "uniform_random",
+    "bit_reverse",
 ]
 topologies = [
     "--topology=Mesh_XY --mesh-rows=8 --routing-algorithm=0",
@@ -138,7 +138,7 @@ plt.legend()
 plt.grid(True)
 
 # Save plot to the script directory
-output_image = "routing.png"
+output_image = "./report/routing.png"
 plt.savefig(output_image)
 
 # Delete temporary folder and its contents

@@ -136,7 +136,7 @@ plt.legend()
 plt.grid(True)
 
 # Save plot to the script directory
-output_image = "topology_1.png"
+output_image = "./report/topology_1.png"
 plt.savefig(output_image)
 
 # Delete temporary folder and its contents
